@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Design Patterns on Sébastien Putier - Blog</title>
+    <link>https://sputier.github.io/fr/categories/design-patterns/</link>
+    <description>Recent content in Design Patterns on Sébastien Putier - Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>fr</language>
+    <lastBuildDate>Thu, 12 Dec 2019 00:00:00 +0100</lastBuildDate>
+    
+	<atom:link href="https://sputier.github.io/fr/categories/design-patterns/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Design patterns  - Builder</title>
+      <link>https://sputier.github.io/fr/blog/2019/12/12/design-pattern-builder/</link>
+      <pubDate>Thu, 12 Dec 2019 00:00:00 +0100</pubDate>
+      
+      <guid>https://sputier.github.io/fr/blog/2019/12/12/design-pattern-builder/</guid>
+      <description>Le design pattern Builder est un pattern de création simple mais puissant. Cet article montre comment l&amp;rsquo;utiliser pour encapsuler la complexité nécessaire à la création d&amp;rsquo;un objet.
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application utilise des chaînes de connexion dynamiques pour accéder à différentes bases de données. La liste ci-dessous montre certaines des dernières chaînes de connexion que l&amp;rsquo;application a généré :</description>
+    </item>
+    
+  </channel>
+</rss>

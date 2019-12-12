@@ -1,0 +1,95 @@
+/*
+  This css file is for individual users to restyle items for their personal site,
+  or for the implementation of features specifically for their site. Anything that
+  is an official part of the theme (ex. Pull Requests) should be included in main.css
+  within the formating given.
+*/
+
+#wrapper {
+  max-width: 90vmax;
+}
+
+.post {
+  max-width: 100%; 
+}
+
+code {
+  line-height: 1.35em;
+}
+
+.post .content img {
+  padding : 1em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border: 1px solid #EEE;
+}
+
+/* for image caption */
+.post .content img + em {
+    display: inherit;
+    text-align: center;
+    font-size: 90%;
+    margin-top: -1em;
+}
+
+.alert {
+    display: block;
+    position: relative;
+    border-radius: 6px;
+    font-size: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: hsla(0,0%,95%,1);
+    background-color: var(--body-background-dark);
+    color: hsla(0,0%,9%,1);
+    color: var(--text);
+    transition: height .5s ease-in,opacity .5s ease-in;
+    word-wrap: break-word;
+    word-break: break-word;
+    border: 1px solid hsla(0,0%,100%,0);
+    border: 1px solid var(--border-white-high-contrast);
+}
+
+.alert-title {
+  color: hsla(262,46%,25%,1);
+  font-weight: 600;
+}
+
+.alert.notes .alert-title:before {
+  font-family: "Font Awesome 5 Free";
+  font-variant: normal;
+  font-weight: 400;
+  content: "\f249";
+  margin-right: 0.5em;
+}
+
+.alert>:first-child {
+    margin-top: 0;
+}
+.alert>:last-child {
+    margin-bottom: 0;
+}
+
+.alert.notes {
+  background: rgb(244, 244, 244)!important;
+  border: 1px solid rgb(230, 230, 230);
+  /* hsla(262,46%,90%,1)!important;   --Mauve 
+  border: 1px solid hsla(262,46%,90%,.999);*/
+}
+
+/* .alert-title {
+  color: hsla(262,46%,25%,1);
+  font-weight: 600;
+}
+.alert-title:before {
+    content: "\FF17";
+} */
+
+code {
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  overflow-x: none;
+}
