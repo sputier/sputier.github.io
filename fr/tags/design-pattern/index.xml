@@ -18,7 +18,7 @@
       
       <guid>https://sputier.github.io/fr/blog/2019/12/15/design-pattern-adapter/</guid>
       <description>Le design pattern Adapter est un pattern structurel qui a pour but de permettre à des systèmes incompatibles de fonctionner ensemble. Cet article montre comment l&amp;rsquo;utiliser pour créer un système cohérent à partir de 2 composants indépendants.
-Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  The problem Notre application génère des factures à partir de données stockées quelque part dans une base de données.</description>
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application génère des factures à partir de données stockées quelque part dans une base de données.</description>
     </item>
     
     <item>

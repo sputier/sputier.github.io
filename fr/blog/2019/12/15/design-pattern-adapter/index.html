@@ -10,7 +10,7 @@
   <meta name="generator" content="Hugo 0.59.1" />
   <meta itemprop="name" content="Design patterns - Adapter">
 <meta itemprop="description" content="Le design pattern Adapter est un pattern structurel qui a pour but de permettre à des systèmes incompatibles de fonctionner ensemble. Cet article montre comment l&rsquo;utiliser pour créer un système cohérent à partir de 2 composants indépendants.
-Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  The problem Notre application génère des factures à partir de données stockées quelque part dans une base de données.">
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application génère des factures à partir de données stockées quelque part dans une base de données.">
 
 
 <meta itemprop="datePublished" content="2019-12-15T00:00:00&#43;01:00" />
@@ -23,7 +23,7 @@ Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous tr
 
   <meta property="og:title" content="Design patterns - Adapter" />
 <meta property="og:description" content="Le design pattern Adapter est un pattern structurel qui a pour but de permettre à des systèmes incompatibles de fonctionner ensemble. Cet article montre comment l&rsquo;utiliser pour créer un système cohérent à partir de 2 composants indépendants.
-Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  The problem Notre application génère des factures à partir de données stockées quelque part dans une base de données." />
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application génère des factures à partir de données stockées quelque part dans une base de données." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://sputier.github.io/fr/blog/2019/12/15/design-pattern-adapter/" />
 <meta property="article:published_time" content="2019-12-15T00:00:00+01:00" />
@@ -32,7 +32,7 @@ Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous tr
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Design patterns - Adapter"/>
 <meta name="twitter:description" content="Le design pattern Adapter est un pattern structurel qui a pour but de permettre à des systèmes incompatibles de fonctionner ensemble. Cet article montre comment l&rsquo;utiliser pour créer un système cohérent à partir de 2 composants indépendants.
-Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  The problem Notre application génère des factures à partir de données stockées quelque part dans une base de données."/>
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application génère des factures à partir de données stockées quelque part dans une base de données."/>
 <meta name="twitter:site" content="@sputier"/>
 
   
@@ -307,11 +307,11 @@ Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous tr
         Note
     </span>
     <p>
-        Cet article fait partie d'une série sur les Design Patterns. Vous trouverez la liste des articles publiés <a href="/series#design-patterns">ici</a>.
+        Cet article fait partie d'une série sur les Design Patterns. Vous trouverez la liste des articles publiés <a href="/fr/series#design-patterns">ici</a>.
     </p>
 </div>
 
-<h3 id="the-problem">The problem</h3>
+<h3 id="le-problème">Le problème</h3>
 
 <p>Notre application génère des factures à partir de données stockées quelque part dans une base de données. Elle supporte aujourd&rsquo;hui les formats .docx (pour l&rsquo;impressione t l&rsquo;archivage) ainsi que HTMl (pour la prévisualisation). Aujourd&rsquo;hui un manager est venu nous voir en demandant l&rsquo;intégration du support des PDF, sous prétexte que certains de nos clients veulent recevoir des factures électroniques au lieu de factures papiers. Et bien sur, il &lsquo;voudrait&rdquo; envoyer les factures en question au plus vite. Par conséquent, pas le temps de faire les choses par nous-mêmes : nous avons besoin d&rsquo;un composant tiers. Celui que nous avons trouvé n&rsquo;est pas très cher, convient parfaitement à ce que l&rsquo;on veut générer, et le vendeur fournit un support de bonne qualité. Super !</p>
 
