@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+  <meta charset="utf-8">
+<title>Design patterns  - Builder - Sébastien Putier - Blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+  <meta name="generator" content="Hugo 0.58.3" />
+  <meta itemprop="name" content="Design patterns  - Builder">
+<meta itemprop="description" content="Le design pattern Builder est un pattern de création simple mais puissant. Cet article montre comment l&rsquo;utiliser pour encapsuler la complexité nécessaire à la création d&rsquo;un objet.
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application utilise des chaînes de connexion dynamiques pour accéder à différentes bases de données. La liste ci-dessous montre certaines des dernières chaînes de connexion que l&rsquo;application a généré :">
+
+
+<meta itemprop="datePublished" content="2019-12-12T00:00:00&#43;01:00" />
+<meta itemprop="dateModified" content="2019-12-12T00:00:00&#43;01:00" />
+<meta itemprop="wordCount" content="1551">
+
+
+
+<meta itemprop="keywords" content="design-pattern," />
+
+  <meta property="og:title" content="Design patterns  - Builder" />
+<meta property="og:description" content="Le design pattern Builder est un pattern de création simple mais puissant. Cet article montre comment l&rsquo;utiliser pour encapsuler la complexité nécessaire à la création d&rsquo;un objet.
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application utilise des chaînes de connexion dynamiques pour accéder à différentes bases de données. La liste ci-dessous montre certaines des dernières chaînes de connexion que l&rsquo;application a généré :" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sputier.github.io/fr/blog/2019/12/12/design-pattern-builder/" />
+<meta property="article:published_time" content="2019-12-12T00:00:00+01:00" />
+<meta property="article:modified_time" content="2019-12-12T00:00:00+01:00" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Design patterns  - Builder"/>
+<meta name="twitter:description" content="Le design pattern Builder est un pattern de création simple mais puissant. Cet article montre comment l&rsquo;utiliser pour encapsuler la complexité nécessaire à la création d&rsquo;un objet.
+Note   Cet article fait partie d&#39;une série sur les Design Patterns. Vous trouverez la liste des articles publiés ici.  Le problème Notre application utilise des chaînes de connexion dynamiques pour accéder à différentes bases de données. La liste ci-dessous montre certaines des dernières chaînes de connexion que l&rsquo;application a généré :"/>
+<meta name="twitter:site" content="@sputier"/>
+
+  
+
+  <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
+  
+    
+      <link rel="stylesheet" href="/css/normalize.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,800,900|Source+Sans+Pro:400,700">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="sha384-i1LQnF23gykqWXg6jxC2ZbCbUMxyw5gLZY6UiUS98LYV5unm8GWmfkIS6jqJfb4E" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
+      
+      
+      <link rel="stylesheet" href="/css/main.min.6d22afd25890242552a63002032532e43f59b91eea454409de37a6bc3cc90b90.css" integrity="sha256-bSKv0liQJCVSpjACAyUy5D9ZuR7qRUQJ3jemvDzJC5A=">
+      <link rel="stylesheet" href="/css/add-on.css">
+    
+  
+  
+  
+  
+    
+  
+</head>
+
+  <body>
+    
+<header id="site-header">
+  <nav id="site-nav">
+    <h1 class="nav-title">
+      <a href="/fr/">
+        
+          
+            Blog
+          
+        
+      </a>
+    </h1>
+    <menu id="site-nav-menu" class="flyout-menu">
+      
+        
+          
+          
+            <a href="/fr/" class="link"><i class='fas fa-home'></i> Accueil</a>
+          
+        
+      
+        
+          
+          
+            <a href="/fr/series/" class="link"><i class='fas fa-list'></i> Series</a>
+          
+        
+      
+        
+          
+          
+            <a href="/fr/about/" class="link"><i class='far fa-id-card'></i> A propos</a>
+          
+        
+      
+        
+          
+          
+            <a href="/fr/contact/" class="link"><i class='far fa-envelope'></i> Contact</a>
+          
+        
+      
+      <a href="#share-menu" class="share-toggle"><i class="fas fa-share-alt">&nbsp;</i>Share</a>
+      
+
+    </menu>
+    
+
+    <a href="#share-menu" class="share-toggle"><i class="fas fa-share-alt fa-2x">&nbsp;</i></a>
+    <a href="#lang-menu" class="lang-toggle" lang="fr">fr</a>
+    <a href="#site-nav" class="nav-toggle"><i class="fas fa-bars fa-2x"></i></a>
+  </nav>
+  <menu id="lang-menu" class="flyout-menu">
+  <a href="#" lang="fr" class="link active">Français (fr)</a>
+  
+      <a href="https://sputier.github.io/blog/2019/12/12/design-pattern-builder/" lang="en" class="link">English (en)</a>
+    
+  
+</menu>
+
+  
+    <menu id="share-menu" class="flyout-menu">
+      <h1>Share Post</h1>
+      
+
+
+
+
+  
+    
+    <a href="//twitter.com/share?text=Design%20patterns%20%20-%20Builder&amp;url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f" target="_blank" rel="noopener" class="share-btn twitter">
+        <i class="fab fa-twitter"></i><p>&nbsp;Twitter</p>
+      </a>
+  
+
+  
+      <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f" target="_blank" rel="noopener" class="share-btn facebook">
+        <i class="fab fa-facebook"></i><p>&nbsp;Facebook</p>
+        </a>
+  
+
+  
+    <a href="//www.reddit.com/submit?url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f&amp;title=Design%20patterns%20%20-%20Builder" target="_blank" rel="noopener" class="share-btn reddit">
+          <i class="fab fa-reddit-alien"></i><p>&nbsp;Reddit</p>
+        </a>
+  
+
+  
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f&amp;title=Design%20patterns%20%20-%20Builder" target="_blank" rel="noopener" class="share-btn linkedin">
+            <i class="fab fa-linkedin"></i><p>&nbsp;LinkedIn</p>
+          </a>
+  
+
+  
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f&amp;description=Design%20patterns%20%20-%20Builder" target="_blank" rel="noopener" class="share-btn pinterest">
+          <i class="fab fa-pinterest-p"></i><p>&nbsp;Pinterest</p>
+        </a>
+  
+
+  
+        <a href="mailto:?subject=Check out this post by S%c3%a9bastien&amp;body=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f" target="_blank" class="share-btn email" data-proofer-ignore>
+          <i class="fas fa-envelope"></i><p>&nbsp;Email</p>
+        </a>
+  
+
+
+    </menu>
+  
+</header>
+
+    <div id="wrapper">
+      <section id="site-intro">
+  <a href="/fr/"><img src="/img/main/logo.jpg" class="circle" width="" alt="" /></a>
+  <header>
+    <h1>Sébastien Putier</h1>
+  </header>
+  <main>
+    <p>Another tech blog, but this one is mine.</p>
+  </main>
+  
+    <footer>
+      <ul class="socnet-icons">
+        
+
+        <li><a href="//github.com/sputier" target="_blank" rel="noopener" title="GitHub" class="fab fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+<li><a href="//linkedin.com/in/sebastien-putier" target="_blank" rel="noopener" title="LinkedIn" class="fab fa-linkedin"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li><a href="//twitter.com/sputier" target="_blank" rel="noopener" title="Twitter" class="fab fa-twitter"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+      </ul>
+    </footer>
+  
+</section>
+
+      <main id="site-main">
+        <article class="post">
+  <header>
+  <div class="title">
+    
+        <h2><a href="/fr/blog/2019/12/12/design-pattern-builder/">Design patterns  - Builder</a></h2>
+    
+    
+</div>
+  <div class="meta">
+    <time class="published" datetime="2019-12-12 00:00:00 &#43;0100 &#43;0100">
+      12-12-2019
+    </time>
+    <span class="author">Sébastien</span>
+    
+      <p>8 minutes</p>
+    
+  </div>
+</header>
+
+  <section id="socnet-share">
+    
+
+
+
+
+  
+    
+    <a href="//twitter.com/share?text=Design%20patterns%20%20-%20Builder&amp;url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f" target="_blank" rel="noopener" class="share-btn twitter">
+        <i class="fab fa-twitter"></i><p>&nbsp;Twitter</p>
+      </a>
+  
+
+  
+      <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f" target="_blank" rel="noopener" class="share-btn facebook">
+        <i class="fab fa-facebook"></i><p>&nbsp;Facebook</p>
+        </a>
+  
+
+  
+    <a href="//www.reddit.com/submit?url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f&amp;title=Design%20patterns%20%20-%20Builder" target="_blank" rel="noopener" class="share-btn reddit">
+          <i class="fab fa-reddit-alien"></i><p>&nbsp;Reddit</p>
+        </a>
+  
+
+  
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f&amp;title=Design%20patterns%20%20-%20Builder" target="_blank" rel="noopener" class="share-btn linkedin">
+            <i class="fab fa-linkedin"></i><p>&nbsp;LinkedIn</p>
+          </a>
+  
+
+  
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f&amp;description=Design%20patterns%20%20-%20Builder" target="_blank" rel="noopener" class="share-btn pinterest">
+          <i class="fab fa-pinterest-p"></i><p>&nbsp;Pinterest</p>
+        </a>
+  
+
+  
+        <a href="mailto:?subject=Check out this post by S%c3%a9bastien&amp;body=https%3a%2f%2fsputier.github.io%2ffr%2fblog%2f2019%2f12%2f12%2fdesign-pattern-builder%2f" target="_blank" class="share-btn email" data-proofer-ignore>
+          <i class="fas fa-envelope"></i><p>&nbsp;Email</p>
+        </a>
+  
+
+
+  </section>
+  
+
+  <div class="content">
+    
+
+<p>Le design pattern Builder est un <strong>pattern de création</strong> simple mais puissant. Cet article montre comment l&rsquo;utiliser pour encapsuler la complexité nécessaire à la création d&rsquo;un objet.</p>
+
+<div class="alert notes">
+    <span class="alert-title">
+        Note
+    </span>
+    <p>
+        Cet article fait partie d'une série sur les Design Patterns. Vous trouverez la liste des articles publiés <a href="/fr/series#design-patterns">ici</a>.
+    </p>
+</div>
+
+<h3 id="le-problème">Le problème</h3>
+
+<p>Notre application utilise des chaînes de connexion dynamiques pour accéder à différentes bases de données. La liste ci-dessous montre certaines des dernières chaînes de connexion que l&rsquo;application a généré :</p>
+
+<ul>
+<li><strong>Data Source</strong>=myServerAddress;<strong>Initial Catalog</strong>=myDatabase;<strong>MultipleActiveResultSets</strong>=True;<strong>Trusted_Connection</strong>=True;</li>
+<li><strong>Data Source</strong>=myServerAddress;<strong>Initial Catalog</strong>=myDatabase;<strong>Integrated Security</strong>=SSPI;<strong>Password</strong>=myPassword;<strong>User ID</strong>=myDomain\myUsername;</li>
+<li><strong>Data Source</strong>=myServerAddress;<strong>Initial Catalog</strong>=myDatabase;<strong>Packet Size</strong>=4096;<strong>Password</strong>=myPassword;<strong>Trusted_Connection</strong>=False;<strong>User ID</strong>=myUsername;</li>
+</ul>
+
+<p>Jetons un oeil attentif à cette liste&hellip; Que remarque t-on ?
+Les chaînes de connexion contiennent différents paramètres (ordonnés selon leur nom), mais elles n&rsquo;utilisent pas toutes les mêmes. Le tableau suivant met en évidence les différences qui existent entre les 3 chaînes de connexion.</p>
+
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Chaîne 1</th>
+<th>Chaîne 2</th>
+<th>Chaîne 3</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Data Source</td>
+<td>myServerAddress</td>
+<td>myServerAddress</td>
+<td>myServerAddress</td>
+</tr>
+
+<tr>
+<td>Initial Catalog</td>
+<td>myDatabase</td>
+<td>myDatabase</td>
+<td>myDatabase</td>
+</tr>
+
+<tr>
+<td>Trusted_Connection</td>
+<td>True</td>
+<td>-</td>
+<td>False</td>
+</tr>
+
+<tr>
+<td>MultipleActiveResultSets</td>
+<td>True</td>
+<td>-</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>Integrated Security</td>
+<td>-</td>
+<td>SSPI</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>User ID</td>
+<td>-</td>
+<td>myDomain\myUsername</td>
+<td>myUsername</td>
+</tr>
+
+<tr>
+<td>Password</td>
+<td>-</td>
+<td>myPassword</td>
+<td>myPassword</td>
+</tr>
+
+<tr>
+<td>PacketSize</td>
+<td>-</td>
+<td>-</td>
+<td>4096</td>
+</tr>
+</tbody>
+</table>
+
+<p>Quelque part dans le code de l&rsquo;application, un développeur a écrit une fonction destinée à générer les chaînes de connexion. Voilà son implémentation :</p>
+
+<pre><code class="language-csharp">
+public static string GetConnectionString(string dataSource,
+                                            string initialCatalog,
+                                            bool? trustedConnection = null,
+                                            bool? multipleActiveResultSets = null,
+                                            string integratedSecurity = null,
+                                            string userId = null,
+                                            string password = null,
+                                            int? packetSize = null)
+{
+    if (dataSource == null)
+        throw new ArgumentNullException(nameof(dataSource));
+    if (initialCatalog == null)
+        throw new ArgumentNullException(nameof(initialCatalog));
+
+    if (trustedConnection.HasValue &amp;&amp; trustedConnection.Value &amp;&amp; (userId != null || password != null))
+        throw new ArgumentException($&quot;{nameof(userId)} and {nameof(password)} cannot be set when {nameof(trustedConnection)} is set to True.&quot;);
+
+
+    string result = $&quot;Data Source={dataSource};Initial Catalog={initialCatalog};&quot;;
+
+    if (integratedSecurity != null)
+        result += $&quot;Integrated Security={integratedSecurity};&quot;;
+    if (multipleActiveResultSets.HasValue)
+        result += $&quot;MultipleActiveResultSets={(multipleActiveResultSets.Value ? &quot;True&quot; : &quot;False&quot;)};&quot;;
+    if (packetSize.HasValue)
+        result += $&quot;Packet Size={packetSize.Value};&quot;;
+    if (password != null)
+        result += $&quot;Password={password};&quot;;
+    if (trustedConnection.HasValue)
+        result += $&quot;Trusted_Connection={(trustedConnection.Value ? &quot;True&quot; : &quot;False&quot;)};&quot;;
+    if (userId != null)
+        result += $&quot;User ID={userId};&quot;;
+
+    return result;
+}
+
+</code></pre>
+
+<p>Le plus gros problème de cette fonction, c&rsquo;est sa signature : elle a 8 paramètres, dont 6 qui sont optionnels. Niveau lisibilité, c&rsquo;est pas top, et on se retrouve avec une certaine complexité à chaque endroit où elle est appelée. En plus de ça, cette fonction a probablement trop de responsabilités : elle valide les données, fait de nombreux choix concernant le flux d&rsquo;exécution, et construit la chaîne de connexion.</p>
+
+<p>D&rsquo;une point de vue plus fonctionnel, on remarque que la chaîne de connexion résultante est adaptée à SQL Server. Et si on veut rajouter le support de MySQL ou Oracle dans l&rsquo;application ?</p>
+
+<div class="alert notes">
+    <span class="alert-title">
+        Note
+    </span>
+    <p>
+        Evitons de suite de parler de la concaténation de chaînes utilisée dans l'exemple, qui est évidemment une mauvaise idée. Si jamais vous ne le savez pas, utiliser une objet de type StringBuilder est bien plus efficace en termes d'utilisation CPU et mémoire : moins d'allocations de mémoire, moins de copies de données. Mais pour cet article, la concaténation a l'avantage non négligeable d'être plus lisible.
+    </p>
+</div>
+
+<h3 id="une-meilleure-solution-avec-le-pattern-builder">Une meilleure solution avec le pattern Builder</h3>
+
+<p>Tout d&rsquo;abord, commençons par essayer de définir correctement le pattern Builder : c&rsquo;est un modèle utilisé pour contrôler la création d&rsquo;objets qui nécessitent des opérations complexes d&rsquo;initialisation et de configuration. En d&rsquo;autres termes, il orchestre l&rsquo;initialisation et l&rsquo;assemblage des éléments constitutifs de l&rsquo;objet souhaité tout en masquant ce processus derrière des étapes simples de configuration, comme la valorisation de propriétés ou l&rsquo;appels de méthodes.</p>
+
+<p>Et pour notre exemple, qu&rsquo;est ce que ça signifie ? Le Builder que nous allons écrire exposera quelques propriétés (correspondant aux différents paramètres de chaîne de connexion) et une méthode Build qui devra générer la chapine attendue à partir des valeurs de propriétés.</p>
+
+<p>Ci-dessous, une première implémentation plutôt simpliste de notre Builder :</p>
+
+<pre><code class="language-csharp">public class SimpleConnectionStringBuilder
+{
+    public string DataSource { get; set; }
+    public string InitialCatalog { get; set; }
+    public bool? TrustedConnection { get; set; }
+    public bool? MultipleActiveResultSets { get; set; }
+    public string IntegratedSecurity { get; set; }
+    public string UserId { get; set; }
+    public string Password { get; set; }
+    public int? PacketSize { get; set; }
+
+    private void CheckDataValidity()
+    {
+        if (DataSource == null)
+            throw new ArgumentNullException(nameof(DataSource));
+        if (InitialCatalog == null)
+            throw new ArgumentNullException(nameof(InitialCatalog));
+
+        if (TrustedConnection.HasValue &amp;&amp; TrustedConnection.Value &amp;&amp; (UserId != null || Password != null))
+            throw new ArgumentException($&quot;{nameof(UserId)} and {nameof(Password)} cannot be set when {nameof(TrustedConnection)} is set to True.&quot;);
+    }
+
+    public string Build()
+    {
+        CheckDataValidity();
+
+        string result = $&quot;Data Source={DataSource};Initial Catalog={InitialCatalog};&quot;;
+
+        if (IntegratedSecurity != null)
+            result += $&quot;Integrated Security={IntegratedSecurity};&quot;;
+        if (MultipleActiveResultSets.HasValue)
+            result += $&quot;MultipleActiveResultSets={(MultipleActiveResultSets.Value ? &quot;True&quot; : &quot;False&quot;)};&quot;;
+        if (PacketSize.HasValue)
+            result += $&quot;Packet Size={PacketSize.Value};&quot;;
+        if (Password != null)
+            result += $&quot;Password={Password};&quot;;
+        if (TrustedConnection.HasValue)
+            result += $&quot;Trusted_Connection={(TrustedConnection.Value ? &quot;True&quot; : &quot;False&quot;)};&quot;;
+        if (UserId != null)
+            result += $&quot;User ID={UserId};&quot;;
+
+        return result;
+    }
+}
+</code></pre>
+
+<p>La complexité est maintenant masquée derrière 8 propriétés et une méthode sans paramètre. C&rsquo;est bien mieux ! Maintenant, la générationd &lsquo;une chaîne de connexion est bien plus simple : instanciation d&rsquo;une objet <code>SimpleConnectionBuilder</code>, valorisation des propriétés qui doivent l&rsquo;être, et enfin appel de la méthode <code>Build</code>.</p>
+
+<pre><code class="language-csharp">var builder = new SimpleConnectionStringBuilder();
+builder.DataSource = &quot;myServerAddress&quot;;
+builder.InitialCatalog = &quot;myDatabase&quot;;
+builder.MultipleActiveResultSets = false;
+builder.TrustedConnection = true;
+builder.PacketSize = 4096;
+
+var result = builder.Build();
+// result equals &quot;Data Source=myServerAddress;Initial Catalog=myDatabase;MultipleActiveResultSets=False;Packet Size=4096;Trusted_Connection=True;&quot;
+</code></pre>
+
+<p>Même si jusque là, les choses avancent bien, on a toujours un problème : notre code n&rsquo;est pas capable de gérer simplement les chaînes de connexion pour différents types de bases de données. Par exemple, pour indiquer l&rsquo;adresse d&rsquo;un serveur de base de données SQL Server, on utilise le paramètre <code>Data Source</code>, alors qu&rsquo;on utilise <code>Server</code> pour MySQL. Et on ne peut décemment pas tout implémenter au sein du même type en vertu du principe de séparation des responsabilités (génrer une chaîne de connexion SQL Server n&rsquo;est pas la même chose que générer une chaîne de connexion MySQL).</p>
+
+<p>Pour résoudre ce problème, on peut créer une hioérarchie de classes avec une classe parente abstraite <code>ConnectionStringBuilder</code>, and diffrents types enfants spécifiques aux types de bases de données. Pour maximiser le partage de code, le type parent devrait être responsable du processus de génération. Par conséquent, il doit être capable de travailler sur une liste dynamique de paramètres (au niveau des collections <code>_connectionStringKeywords</code> et <code>_connectionStringValues</code> dans l&rsquo;implémentation ci-dessous). Les classes enfants n&rsquo;ont alors plus qu&rsquo;à fournir les noms de paramètres pour les propriétés communes (si besoin) et spécifiques.</p>
+
+<pre><code class="language-csharp">public abstract class ConnectionStringBuilder
+{
+    private readonly Dictionary&lt;string, string&gt; _connectionStringKeywords = new Dictionary&lt;string, string&gt;();
+    private readonly Dictionary&lt;string, object&gt; _connectionStringValues = new Dictionary&lt;string, object&gt;();
+
+    public virtual string Server { get =&gt; GetValue&lt;string&gt;(); set =&gt; SetValue(value); }
+    public string DatabaseName { get =&gt; GetValue&lt;string&gt;(); set =&gt; SetValue(value); }
+    public string Login { get =&gt; GetValue&lt;string&gt;(); set =&gt; SetValue(value); }
+    public string Password { get =&gt; GetValue&lt;string&gt;(); set =&gt; SetValue(value); }
+
+    protected T GetValue&lt;T&gt;([CallerMemberName] string key = null)
+        =&gt; (T)_connectionStringValues.GetValueOrDefault(key);
+
+    protected void SetValue(object value, [CallerMemberName] string key = null)
+        =&gt; _connectionStringValues[key] = value;
+
+    public ConnectionStringBuilder() { }
+
+    protected void SetParameterNameForProperty(string propertyName, string parameterName)
+        =&gt; _connectionStringKeywords[propertyName] = parameterName;
+
+    protected virtual void CheckDataValidity()
+    {
+        if (Server == null)
+            throw new ArgumentNullException(nameof(Server));
+        if (DatabaseName == null)
+            throw new ArgumentNullException(nameof(DatabaseName));
+    }
+
+    public string Build()
+    {
+        CheckDataValidity();
+
+        var keyValues = _connectionStringKeywords.Join(_connectionStringValues,
+                                                        cskKvp =&gt; cskKvp.Key,
+                                                        csvKvp =&gt; csvKvp.Key,
+                                                        (csk, csv) =&gt; new { Keyword = csk.Value, Value = csv.Value });
+
+        string result = string.Empty;
+        foreach (var keyValue in keyValues.OrderBy(kv =&gt; kv.Keyword))
+        {
+            if (keyValue.Value == null)
+                continue;
+
+            result += $&quot;{keyValue.Keyword}={keyValue.Value};&quot;;
+        }
+
+        return result;
+    }
+}
+
+public class SqlServerConnectionStringBuilder : ConnectionStringBuilder
+{
+    public bool? TrustedConnection { get =&gt; GetValue&lt;bool?&gt;(); set =&gt; SetValue(value); }
+    public bool? MultipleActiveResultSets { get =&gt; GetValue&lt;bool?&gt;(); set =&gt; SetValue(value); }
+    public string IntegratedSecurity { get =&gt; GetValue&lt;string&gt;(); set =&gt; SetValue(value); }
+    public int? PacketSize { get =&gt; GetValue&lt;int?&gt;(); set =&gt; SetValue(value); }
+
+    public SqlServerConnectionStringBuilder()
+    {
+        SetParameterNameForProperty(nameof(Server), &quot;Data Source&quot;);
+        SetParameterNameForProperty(nameof(DatabaseName), &quot;Initial Catalog&quot;);
+        SetParameterNameForProperty(nameof(Login), &quot;User ID&quot;);
+        SetParameterNameForProperty(nameof(Password), &quot;Password&quot;);
+        SetParameterNameForProperty(nameof(TrustedConnection), &quot;Trusted_Connection&quot;);
+        SetParameterNameForProperty(nameof(MultipleActiveResultSets), &quot;MultipleActiveResultSets&quot;);
+        SetParameterNameForProperty(nameof(IntegratedSecurity), &quot;Integrated Security&quot;);
+        SetParameterNameForProperty(nameof(PacketSize), &quot;Packet Size&quot;);
+    }
+
+    protected override void CheckDataValidity()
+    {
+        base.CheckDataValidity();
+
+        if (TrustedConnection.HasValue &amp;&amp; TrustedConnection.Value &amp;&amp; (Login != null || Password != null))
+            throw new ArgumentException($&quot;{nameof(Login)} and {nameof(Password)} cannot be set when {nameof(TrustedConnection)} is set to True.&quot;);
+    }
+}
+
+public class MySqlConnectionStringBuilder : ConnectionStringBuilder
+{
+    public bool? UseCompression { get =&gt; GetValue&lt;bool?&gt;(); set =&gt; SetValue(value); }
+    public bool? UseUsageAdvisor { get =&gt; GetValue&lt;bool?&gt;(); set =&gt; SetValue(value); }
+    public bool? UsePerformanceMonitor { get =&gt; GetValue&lt;bool?&gt;(); set =&gt; SetValue(value); }
+
+    public MySqlConnectionStringBuilder()
+    {
+        SetParameterNameForProperty(nameof(Server), &quot;Server&quot;);
+        SetParameterNameForProperty(nameof(DatabaseName), &quot;Database&quot;);
+        SetParameterNameForProperty(nameof(Login), &quot;Uid&quot;);
+        SetParameterNameForProperty(nameof(Password), &quot;Pwd&quot;);
+        SetParameterNameForProperty(nameof(UseCompression), &quot;UseCompression&quot;);
+        SetParameterNameForProperty(nameof(UseUsageAdvisor), &quot;UseUsageAdvisor&quot;);
+        SetParameterNameForProperty(nameof(UsePerformanceMonitor), &quot;UsePerformanceMonitor&quot;);
+    }
+}
+</code></pre>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>L&rsquo;utilisation du pattern Builder est une technique très intéressante pour gérer les algorithmes de création d&rsquo;objets complexes. Il permet non seulement de construire un objet par configuration, mais avec un peu d&rsquo;héritage, il permet de gérer facilement des cas similaires mais différents. Bien sur, notre exemple est passé de 44 à 96 lignes, mais les modifications effectuées offrent un certain nombre d&rsquo;avantages :</p>
+
+<ul>
+<li><strong>amélioration de la lisibilité</strong> en supprimant de nombreux paramètres (notamment optionnels) au niveau des appels de fonction</li>
+<li><strong>amélioration de la maintenabilité</strong> en déplaçant (et en masquant) la complexité dans un type indépendant</li>
+<li><strong>ajout du support des chaînes des connexion pour MySQL</strong></li>
+<li><strong>ajout d&rsquo;un point d&rsquo;extensibilité</strong> : ajouter le support d&rsquo;un nouveau type de base de données ne nécessite que de créer une classe hériant de <code>ConnectionStringBuilder</code>, et ajouter un nouveau paramètre de chaîne de connexion ne nécessite que de créer une propriété et ajouter un appel à la méthode <code>SetParameterNameForProperty</code>.</li>
+</ul>
+
+  </div>
+  <footer>
+    <ul class="stats">
+  
+    
+    
+      <li class="categories">
+        <ul>
+          
+            
+            <li><a class="article-category-link" href="https://sputier.github.io/fr/categories/design-patterns">Design Patterns</a></li>
+          
+        </ul>
+      </li>
+    
+  
+  
+    
+    
+      <li class="tags">
+        <ul>
+          
+            
+            <li><a class="article-category-link" href="https://sputier.github.io/fr/tags/design-pattern">design-pattern</a></li>
+          
+        </ul>
+      </li>
+    
+  
+</ul>
+
+  </footer>
+</article>
+
+    <article class="post">
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sputier-github-io" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </article>
+
+
+
+
+<div class="pagination">
+  
+  
+    <a href="/fr/blog/2019/12/15/design-pattern-adapter/" class="button"><div class="next"><div>Design patterns - Adapter</div></div></a>
+  
+</div>
+
+
+      </main>
+      <section id="site-sidebar">
+
+        <section id="mini-bio">
+            <header>
+              <h1>A propos</h1>
+            </header>
+            <p>• French dev<br />• Mainly .NET<br />• Trying to learn everything</p>
+            <footer>
+              <a href="/fr/about" class="button">En savoir plus</a>
+            </footer>
+          </section>
+      
+        
+          <section id="recent-posts">
+            <header>
+              <h1>Posts récents</h1>
+            </header>
+            
+            <article class="mini-post">
+              <section>
+                
+
+              </section>
+              <header>
+                <h1><a href="/fr/blog/2019/12/15/design-pattern-adapter/">Design patterns - Adapter</a></h1>
+                <time class="published" datetime="">15-12-2019</time>
+              </header>
+            </article>
+            
+            <article class="mini-post">
+              <section>
+                
+
+              </section>
+              <header>
+                <h1><a href="/fr/blog/2019/12/12/design-pattern-builder/">Design patterns  - Builder</a></h1>
+                <time class="published" datetime="">12-12-2019</time>
+              </header>
+            </article>
+            
+            
+          </section>
+        
+      
+        
+          
+            <section id="categories">
+              <header>
+                <h1><a href="/fr/categories">Catégories</a></h1>
+              </header>
+              <ul>
+                
+                  
+                
+                
+                <li>
+                  
+                    <a href="/fr/categories/design-patterns/">design-patterns<span class="count">2</span></a>
+                  
+                
+                </li>
+              </ul>
+            </section>
+          
+        
+      
+      </section>
+      
+      <footer id="site-footer">
+  
+      <ul class="socnet-icons">
+        
+
+        <li><a href="//github.com/sputier" target="_blank" rel="noopener" title="GitHub" class="fab fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+<li><a href="//linkedin.com/in/sebastien-putier" target="_blank" rel="noopener" title="LinkedIn" class="fab fa-linkedin"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li><a href="//twitter.com/sputier" target="_blank" rel="noopener" title="Twitter" class="fab fa-twitter"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+      </ul>
+  
+  <p class="copyright">
+    
+      &copy; 2019
+      
+        Sébastien Putier - Blog
+      
+    . <br>
+    Thème : <a href='https://github.com/pacollins/hugo-future-imperfect-slim' target='_blank' rel='noopener'>Hugo Future Imperfect Slim</a><br>Un <a href='https://html5up.net/future-imperfect' target='_blank' rel='noopener'>portage de HTML5 UP</a> | Propulsé par <a href='https://gohugo.io/' title='0.58.3' target='_blank' rel='noopener'>Hugo</a>
+  </p>
+</footer>
+<a id="back-to-top" href="#" class="fas fa-arrow-up fa-2x"></a>
+
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/html.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/css.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/js.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/toml.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+  <script src=/js/util.js></script>
+  <script src=/js/main.js></script>
+  <script src=/js/add-on.js></script>
+  
+
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-153994759-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    </div>
+  </body>
+</html>
